@@ -12,6 +12,7 @@ jobs:
     permissions:
       statuses: write
       checks: write
+      contents: write
 
     steps:
     - name: Checkout Web App Code
@@ -50,8 +51,8 @@ jobs:
     - name: Install Playwright Browsers
       run: pwsh tests/ECommerce.Playwright.Tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
 
-    - name: Run Playwright Tests
-      run: dotnet test ECommerce.Playwright.slnx --logger:"trx" --results-directory ./TestResults
+    - name: Run Playwright Tests (Smoke)
+      run: dotnet test ECommerce.Playwright.slnx --filter "Category=Smoke" --logger:"trx" --results-directory ./TestResults
       working-directory: ./tests
       env:
         DOTNET_ENVIRONMENT: CI
@@ -63,11 +64,19 @@ jobs:
         name: test-results
         path: ./tests/TestResults/
 
-    - name: Publish Test Report
-      uses: dorny/test-reporter@v1
+    - name: Generate Allure Report
+      uses: simple-elf/allure-report-action@master
       if: always()
       with:
-        name: Playwright Test Results
-        path: "tests/TestResults/**/*.trx"
-        reporter: dotnet-trx
-        fail-on-error: false
+        allure_results: tests/TestResults/allure-results
+        gh_pages: gh-pages
+        allure_report: allure-report
+        allure_history: allure-history
+
+    - name: Deploy Allure Report to Github Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: allure-history

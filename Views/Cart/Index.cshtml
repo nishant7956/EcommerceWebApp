@@ -1,0 +1,120 @@
+@model List<QAAutomationPortfolio.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Bag";
+    var subtotal = Model.Sum(i => i.Price * i.Quantity);
+    var shipping = subtotal >= 50 ? 0 : 9.99m;
+    var total = subtotal + shipping;
+}
+
+<div class="cart-page">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <a asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none"><i class="bi bi-house"></i> Shop</a>
+            <i class="bi bi-chevron-right text-muted" style="font-size:11px;"></i>
+            <span class="small fw-semibold">Shopping Bag</span>
+        </div>
+        <h1 class="fw-bold mb-4" style="font-size: 1.6rem; letter-spacing: -0.5px;">
+            Shopping Bag <span class="text-muted fw-normal fs-6 ms-2">(@Model.Sum(i => i.Quantity) items)</span>
+        </h1>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <div style="width:120px;height:120px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+                    <i class="bi bi-bag fs-1 text-muted opacity-50"></i>
+                </div>
+                <h4 class="fw-bold">Your bag is empty</h4>
+                <p class="text-muted">Looks like you haven't added anything yet.</p>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-2 px-5">Start Shopping</a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                <!-- Items -->
+                <div class="col-lg-8">
+                    <div class="admin-card">
+                        @foreach (var item in Model)
+                        {
+                            <div class="cart-item-row">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Name" class="cart-item-img" />
+                                }
+                                else
+                                {
+                                    <div class="cart-item-img d-flex align-items-center justify-content-center text-muted" style="font-size:1.5rem;">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                }
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold" style="font-size:15px;">@item.Name</div>
+                                    <div class="text-muted small mt-1">Unit price: $@item.Price.ToString("0.00")</div>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-dark border fw-semibold px-3 py-2" style="border-radius:8px; font-size:14px;">×@item.Quantity</span>
+                                </div>
+                                <div class="fw-bold text-end" style="min-width:80px;">$@((item.Price * item.Quantity).ToString("0.00"))</div>
+                                <form asp-action="RemoveFromCart" method="post">
+                                    <input type="hidden" name="id" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Remove" style="border-radius:8px;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary mt-3" style="border-radius:10px;">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="admin-card p-4 position-sticky" style="top: 100px;">
+                        <h5 class="fw-bold mb-4">Order Summary</h5>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-semibold">$@subtotal.ToString("0.00")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Shipping</span>
+                            @if (shipping == 0)
+                            {
+                                <span class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Free</span>
+                            }
+                            else
+                            {
+                                <span class="fw-semibold">$@shipping.ToString("0.00")</span>
+                            }
+                        </div>
+                        @if (subtotal < 50)
+                        {
+                            <div class="alert alert-info border-0 small p-2 mb-3" style="background:#eff6ff;border-radius:10px;">
+                                <i class="bi bi-info-circle me-1"></i> Add $@((50 - subtotal).ToString("0.00")) more for free shipping!
+                            </div>
+                        }
+                        <hr style="border-color: var(--border);" />
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold fs-5">Total</span>
+                            <span class="fw-bold fs-5" style="color: var(--accent);">$@total.ToString("0.00")</span>
+                        </div>
+                        <form asp-action="Checkout" method="post">
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-semibold" style="font-size:16px;">
+                                <i class="bi bi-lock me-2"></i>Secure Checkout
+                            </button>
+                        </form>
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <i class="bi bi-credit-card-2-front text-muted fs-5"></i>
+                            <i class="bi bi-paypal text-muted fs-5"></i>
+                            <i class="bi bi-wallet2 text-muted fs-5"></i>
+                        </div>
+                        <p class="text-muted text-center small mt-2 mb-0">256-bit SSL encrypted checkout</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

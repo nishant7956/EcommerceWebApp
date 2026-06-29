@@ -7,6 +7,15 @@ namespace QAAutomationPortfolio.Controllers
 {
     public class ProductsController : Controller
     {
+        public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
+        {
+            if (HttpContext.Session.GetString("AdminLoggedIn") != "true")
+            {
+                context.Result = RedirectToAction("Login", "AdminAuth", new { returnUrl = Request.Path });
+            }
+            base.OnActionExecuting(context);
+        }
+
         private readonly ApplicationDbContext _context;
 
         public ProductsController(ApplicationDbContext context)

@@ -45,6 +45,10 @@ jobs:
         # If private, you would need: token: ${{ secrets.PAT }}
         path: 'tests'
 
+    - name: Build Playwright Tests
+      run: dotnet build ECommerce.Playwright.slnx
+      working-directory: ./tests
+
     - name: Install Playwright Browsers
       run: pwsh tests/ECommerce.Playwright.Tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
 

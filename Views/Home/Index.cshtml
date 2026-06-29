@@ -1,8 +1,74 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model IEnumerable<QAAutomationPortfolio.Models.Product>
+
+@{
+    ViewData["Title"] = "Storefront";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Hero Section -->
+<div class="p-5 mb-5 rounded-3 hero-section text-center text-white shadow" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container-fluid py-5">
+        <h1 class="display-4 fw-bold">Welcome to Antigravity Store</h1>
+        <p class="col-md-8 mx-auto fs-4 mt-3">Discover premium products built with cutting-edge technology.</p>
+        <a href="#products" class="btn btn-light btn-lg mt-4 fw-semibold px-4 shadow-sm" style="color: #764ba2;">Shop Now</a>
+    </div>
+</div>
+
+<!-- Product Grid -->
+<div id="products" class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0">Featured Products</h2>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 product-card shadow-sm border-0">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" class="card-img-top object-fit-cover p-3" alt="@item.Name" style="height: 220px; border-radius: 20px;">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted" style="height: 220px; border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem;">
+                            <i class="bi bi-image" style="font-size: 3rem;"></i>
+                        </div>
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-truncate" title="@item.Name">@item.Name</h5>
+                        <p class="card-text text-muted small text-truncate-2" style="min-height: 40px;" title="@item.Description">@item.Description</p>
+                        
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fs-5 fw-bold text-primary">$@item.Price.ToString("0.00")</span>
+                                @if (item.StockQuantity > 0)
+                                {
+                                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">In Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">Out of Stock</span>
+                                }
+                            </div>
+                            
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-primary w-100 shadow-sm add-to-cart-btn" @(item.StockQuantity <= 0 ? "disabled" : "")>
+                                    <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

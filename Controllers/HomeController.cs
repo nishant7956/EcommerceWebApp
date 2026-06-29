@@ -2,13 +2,26 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using QAAutomationPortfolio.Models;
 
+using Microsoft.EntityFrameworkCore;
+using QAAutomationPortfolio.Data;
+
 namespace QAAutomationPortfolio.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
-        return View();
+        _logger = logger;
+        _context = context;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var products = await _context.Products.ToListAsync();
+        return View(products);
     }
 
     public IActionResult Privacy()

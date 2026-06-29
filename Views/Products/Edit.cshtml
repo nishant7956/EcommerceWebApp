@@ -1,0 +1,59 @@
+@model QAAutomationPortfolio.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<h1 class="display-6 fw-bold mb-4">Edit Product</h1>
+
+<div class="card shadow border-0" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form asp-action="Edit" id="edit-product-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-bold"></label>
+                <input asp-for="Name" class="form-control form-control-lg" id="product-name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label fw-bold"></label>
+                <textarea asp-for="Description" class="form-control" id="product-description" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label asp-for="Price" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="Price" class="form-control" id="product-price" type="number" step="0.01" />
+                    </div>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="StockQuantity" class="form-label fw-bold"></label>
+                    <input asp-for="StockQuantity" class="form-control" id="product-stock" type="number" />
+                    <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ImageUrl" class="form-label fw-bold">Image URL (Optional)</label>
+                <input asp-for="ImageUrl" class="form-control" id="product-imageurl" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-light border shadow-sm">Back to List</a>
+                <button type="submit" class="btn btn-primary px-5 shadow-sm" id="btn-submit-product">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

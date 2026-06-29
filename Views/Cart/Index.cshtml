@@ -1,0 +1,95 @@
+@model List<QAAutomationPortfolio.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">Shopping Cart</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            Your cart is currently empty. <a href="/" class="alert-link">Continue shopping</a>.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col" class="text-end pe-4">Total</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                                {
+                                                    <img src="@item.ImageUrl" alt="@item.Name" class="rounded me-3 object-fit-cover" style="width: 50px; height: 50px;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center text-muted" style="width: 50px; height: 50px;">
+                                                        <i class="bi bi-image"></i>
+                                                    </div>
+                                                }
+                                                <span class="fw-semibold">@item.Name</span>
+                                            </div>
+                                        </td>
+                                        <td>$@item.Price.ToString("0.00")</td>
+                                        <td>@item.Quantity</td>
+                                        <td class="text-end pe-4 fw-bold">$@((item.Price * item.Quantity).ToString("0.00"))</td>
+                                        <td class="text-end pe-4">
+                                            <form asp-controller="Cart" asp-action="RemoveFromCart" method="post">
+                                                <input type="hidden" name="id" value="@item.ProductId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Order Summary</h4>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-bold">$@Model.Sum(i => i.Price * i.Quantity).ToString("0.00")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success">Free</span>
+                        </div>
+                        <hr />
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fs-5 fw-bold">Total</span>
+                            <span class="fs-5 fw-bold">$@Model.Sum(i => i.Price * i.Quantity).ToString("0.00")</span>
+                        </div>
+                        <form asp-controller="Cart" asp-action="Checkout" method="post">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fs-5 shadow-sm">Proceed to Checkout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

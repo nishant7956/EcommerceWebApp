@@ -9,6 +9,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
 
     steps:
     - name: Checkout Web App Code
@@ -64,3 +67,12 @@ jobs:
       with:
         name: test-results
         path: ./tests/TestResults/
+
+    - name: Publish Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Playwright Test Results
+        path: "tests/TestResults/**/*.trx"
+        reporter: dotnet-trx
+        fail-on-error: false

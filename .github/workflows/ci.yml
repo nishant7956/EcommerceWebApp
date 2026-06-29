@@ -12,6 +12,7 @@ jobs:
     permissions:
       statuses: write
       checks: write
+      contents: write
 
     steps:
     - name: Checkout Web App Code

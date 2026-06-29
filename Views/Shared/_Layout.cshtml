@@ -5,6 +5,8 @@
 @{
     var cart = HttpContextAccessor.HttpContext?.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
     var cartCount = cart.Sum(c => c.Quantity);
+    var isAdminLoggedIn = HttpContextAccessor.HttpContext?.Session.GetString("AdminLoggedIn") == "true";
+    var adminUsername = HttpContextAccessor.HttpContext?.Session.GetString("AdminUsername") ?? "Admin";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -83,9 +85,26 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-icon-btn admin-btn" asp-controller="Products" asp-action="Index" title="Admin Portal">
-                                <i class="bi bi-shield-lock"></i>
-                            </a>
+                            @if (isAdminLoggedIn)
+                            {
+                                <div class="d-flex align-items-center gap-2">
+                                    <a class="nav-icon-btn admin-btn" asp-controller="Products" asp-action="Index" title="Admin Portal">
+                                        <i class="bi bi-shield-check"></i>
+                                    </a>
+                                    <form asp-controller="AdminAuth" asp-action="Logout" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="nav-icon-btn" title="Logout @adminUsername" style="border-color: #fca5a5; color: #ef4444;">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="nav-icon-btn admin-btn" asp-controller="AdminAuth" asp-action="Login" title="Admin Portal Login">
+                                    <i class="bi bi-shield-lock"></i>
+                                </a>
+                            }
                         </li>
                     </ul>
                 </div>

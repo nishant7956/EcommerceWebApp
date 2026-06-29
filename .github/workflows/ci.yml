@@ -51,7 +51,7 @@ jobs:
       run: pwsh tests/ECommerce.Playwright.Tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
 
     - name: Run Playwright Tests
-      run: dotnet test ECommerce.Playwright.slnx --logger:"trx;LogFileName=test_results.trx" --results-directory ./TestResults
+      run: dotnet test ECommerce.Playwright.slnx --logger:"trx" --results-directory ./TestResults
       working-directory: ./tests
       env:
         DOTNET_ENVIRONMENT: CI

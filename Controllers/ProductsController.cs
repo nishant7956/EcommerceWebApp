@@ -7,12 +7,15 @@ namespace QAAutomationPortfolio.Controllers
 {
     public class ProductsController : Controller
     {
-        private IActionResult? RequireAdminLogin()
+        public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
         {
             if (HttpContext.Session.GetString("AdminLoggedIn") != "true")
-                return RedirectToAction("Login", "AdminAuth", new { returnUrl = Request.Path });
-            return null;
+            {
+                context.Result = RedirectToAction("Login", "AdminAuth", new { returnUrl = Request.Path });
+            }
+            base.OnActionExecuting(context);
         }
+
         private readonly ApplicationDbContext _context;
 
         public ProductsController(ApplicationDbContext context)
@@ -23,8 +26,6 @@ namespace QAAutomationPortfolio.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var guard = RequireAdminLogin();
-            if (guard != null) return guard;
             return View(await _context.Products.ToListAsync());
         }
 

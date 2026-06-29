@@ -16,8 +16,6 @@ jobs:
     steps:
     - name: Checkout Web App Code
       uses: actions/checkout@v4
-      with:
-        path: 'webapp'
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -26,13 +24,11 @@ jobs:
 
     - name: Build Web App
       run: dotnet build
-      working-directory: ./webapp
 
     - name: Start Web App in Background
       run: |
         dotnet run --no-build &
         echo "Web App started in the background."
-      working-directory: ./webapp
       env:
         ASPNETCORE_ENVIRONMENT: Development
 

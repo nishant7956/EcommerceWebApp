@@ -11,67 +11,166 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Antigravity Store</title>
+    <title>@ViewData["Title"] - NEXUS Store</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QAAutomationPortfolio.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="sticky-top shadow-sm">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container">
+            <p class="mb-0 text-center">🚀 Free shipping on all orders over $50 &nbsp;|&nbsp; Use code <strong>NEXUS20</strong> for 20% off your first order</p>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="main-header sticky-top">
+        <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
-                <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-box-seam text-primary me-2"></i> Antigravity Store
+                <!-- Brand Logo -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="brand-icon me-2">
+                        <i class="bi bi-hexagon-fill"></i>
+                        <i class="bi bi-lightning-fill brand-icon-inner"></i>
+                    </div>
+                    <span class="brand-name">NEXUS</span>
                 </a>
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5">
+
+                <!-- Nav links center -->
+                <div class="navbar-collapse collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Index">Storefront</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Shop</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Categories</a>
+                            <ul class="dropdown-menu shadow border-0">
+                                <li><a class="dropdown-item" href="#">Electronics</a></li>
+                                <li><a class="dropdown-item" href="#">Clothing</a></li>
+                                <li><a class="dropdown-item" href="#">Home & Garden</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">View All</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" id="nav-products" asp-area="" asp-controller="Products" asp-action="Index">Admin Portal</a>
+                            <a class="nav-link" href="#">Deals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
                         </li>
                     </ul>
-                    
-                    <ul class="navbar-nav ms-auto">
+
+                    <!-- Right side icons -->
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
                         <li class="nav-item">
-                            <a class="nav-link position-relative d-flex align-items-center" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart3 fs-4"></i>
+                            <div class="search-wrapper">
+                                <input type="text" class="form-control search-input" placeholder="Search products..." />
+                                <i class="bi bi-search search-icon"></i>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-icon-btn" asp-controller="Cart" asp-action="Index" title="Shopping Cart">
+                                <i class="bi bi-bag"></i>
                                 @if (cartCount > 0)
                                 {
-                                    <span class="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-                                        @cartCount
-                                        <span class="visually-hidden">items in cart</span>
-                                    </span>
+                                    <span class="nav-badge">@cartCount</span>
                                 }
-                                <span class="ms-2 d-lg-none">Shopping Cart</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-icon-btn admin-btn" asp-controller="Products" asp-action="Index" title="Admin Portal">
+                                <i class="bi bi-shield-lock"></i>
                             </a>
                         </li>
                     </ul>
                 </div>
+
+                <!-- Mobile toggler -->
+                <div class="d-flex align-items-center gap-3 d-lg-none">
+                    <a class="nav-icon-btn position-relative" asp-controller="Cart" asp-action="Index">
+                        <i class="bi bi-bag"></i>
+                        @if (cartCount > 0) { <span class="nav-badge">@cartCount</span> }
+                    </a>
+                    <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                        <i class="bi bi-list fs-3 text-dark"></i>
+                    </button>
+                </div>
             </div>
         </nav>
     </header>
-    <div class="container-fluid p-0" style="min-height: 80vh;">
-        <main role="main" class="pb-5">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted bg-light py-4 mt-auto">
-        <div class="container text-center">
-            &copy; 2026 - Antigravity Store Demo Portfolio
+    <main role="main" style="min-height: 75vh;">
+        @RenderBody()
+    </main>
+
+    <!-- Full-featured Footer -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="brand-icon me-2 small-brand">
+                                <i class="bi bi-hexagon-fill"></i>
+                            </div>
+                            <span class="brand-name text-white">NEXUS</span>
+                        </div>
+                        <p class="text-secondary lh-base">Your premium destination for the latest products. Built with passion, delivered with excellence.</p>
+                        <div class="social-links mt-4">
+                            <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <h6 class="footer-heading">Shop</h6>
+                        <ul class="footer-links">
+                            <li><a href="#">All Products</a></li>
+                            <li><a href="#">New Arrivals</a></li>
+                            <li><a href="#">Best Sellers</a></li>
+                            <li><a href="#">Deals</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <h6 class="footer-heading">Support</h6>
+                        <ul class="footer-links">
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Shipping Policy</a></li>
+                            <li><a href="#">Returns</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h6 class="footer-heading">Newsletter</h6>
+                        <p class="text-secondary small">Stay updated with new products and exclusive offers.</p>
+                        <div class="newsletter-form mt-3">
+                            <input type="email" class="form-control newsletter-input" placeholder="Enter your email..." />
+                            <button class="btn btn-primary newsletter-btn">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                    <p class="mb-0 text-secondary small">&copy; 2026 NEXUS Store. All rights reserved.</p>
+                    <div class="payment-icons mt-2 mt-md-0">
+                        <i class="bi bi-credit-card-2-front text-secondary fs-4 me-2"></i>
+                        <i class="bi bi-paypal text-secondary fs-4 me-2"></i>
+                        <i class="bi bi-wallet2 text-secondary fs-4"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

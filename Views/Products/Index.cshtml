@@ -1,52 +1,122 @@
 @model IEnumerable<QAAutomationPortfolio.Models.Product>
 
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Admin — Products";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="display-5 fw-bold text-primary">Products Catalog</h1>
-    <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm" id="btn-create-product">
-        <i class="bi bi-plus-circle"></i> Add New Product
-    </a>
-</div>
+<div class="admin-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <a asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none">
+                        <i class="bi bi-house"></i> Storefront
+                    </a>
+                    <i class="bi bi-chevron-right text-muted" style="font-size: 11px;"></i>
+                    <span class="small text-muted">Admin</span>
+                </div>
+                <h1 class="fw-bold mb-0" style="font-size: 1.6rem; letter-spacing: -0.5px;">Product Management</h1>
+            </div>
+            <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm" id="btn-create-product">
+                <i class="bi bi-plus-lg"></i> Add Product
+            </a>
+        </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped mb-0 align-middle" id="products-table">
-                <thead class="table-dark">
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.Name)</th>
-                        <th>@Html.DisplayNameFor(model => model.Price)</th>
-                        <th>Stock</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model) {
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="admin-card p-4 text-center">
+                    <div class="fw-bold fs-3" style="color: var(--accent);">@Model.Count()</div>
+                    <div class="text-muted small mt-1">Total Products</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="admin-card p-4 text-center">
+                    <div class="fw-bold fs-3 text-success">@Model.Count(p => p.StockQuantity > 0)</div>
+                    <div class="text-muted small mt-1">In Stock</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="admin-card p-4 text-center">
+                    <div class="fw-bold fs-3 text-danger">@Model.Count(p => p.StockQuantity == 0)</div>
+                    <div class="text-muted small mt-1">Out of Stock</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="admin-card p-4 text-center">
+                    <div class="fw-bold fs-3" style="color: #0ea5e9;">$@Model.Sum(p => p.Price * p.StockQuantity).ToString("N0")</div>
+                    <div class="text-muted small mt-1">Inventory Value</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Table -->
+        <div class="admin-card">
+            <div class="p-4 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--border) !important;">
+                <h6 class="fw-bold mb-0">All Products</h6>
+                <div class="d-flex gap-2">
+                    <input type="search" class="form-control form-control-sm" placeholder="Search..." style="width: 200px;" />
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table admin-table mb-0" id="products-table">
+                    <thead>
                         <tr>
-                            <td class="fw-semibold">@Html.DisplayFor(modelItem => item.Name)</td>
-                            <td class="text-success fw-bold">@item.Price.ToString("C")</td>
-                            <td>
-                                @if(item.StockQuantity > 0)
-                                {
-                                    <span class="badge bg-success rounded-pill">In Stock (@item.StockQuantity)</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger rounded-pill">Out of Stock</span>
-                                }
-                            </td>
-                            <td class="text-end">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                            </td>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" alt="@item.Name" style="width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--border);" />
+                                        }
+                                        else
+                                        {
+                                            <div style="width:44px;height:44px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#cbd5e1;flex-shrink:0;">
+                                                <i class="bi bi-image"></i>
+                                            </div>
+                                        }
+                                        <div>
+                                            <div class="fw-semibold" style="font-size:14px;">@item.Name</div>
+                                            <div class="text-muted" style="font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@item.Description</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-bold" style="color: var(--accent);">$@item.Price.ToString("0.00")</td>
+                                <td class="fw-semibold">@item.StockQuantity</td>
+                                <td>
+                                    @if (item.StockQuantity > 0)
+                                    {
+                                        <span class="stock-in">In Stock</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="stock-out">Out of Stock</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-1" style="border-radius:8px;">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" style="border-radius:8px;">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,42 @@
+@model QAAutomationPortfolio.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1 class="display-6 fw-bold mb-4">Product Details</h1>
+
+<div class="card shadow border-0" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <dl class="row">
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+
+            <dt class="col-sm-4">Price</dt>
+            <dd class="col-sm-8">$@Html.DisplayFor(model => model.Price)</dd>
+
+            <dt class="col-sm-4">Stock Quantity</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.StockQuantity)</dd>
+
+            <dt class="col-sm-4">Image URL</dt>
+            <dd class="col-sm-8">
+                @if (!string.IsNullOrEmpty(Model?.ImageUrl))
+                {
+                    <a href="@Model.ImageUrl" target="_blank">@Model.ImageUrl</a>
+                }
+                else
+                {
+                    <span>N/A</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary px-4 me-2">Edit</a>
+    <a asp-action="Index" class="btn btn-light border">Back to List</a>
+</div>

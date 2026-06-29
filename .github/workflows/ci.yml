@@ -40,8 +40,7 @@ jobs:
     - name: Checkout Playwright Tests Code
       uses: actions/checkout@v4
       with:
-        repository: nishant7956/OrangeHRM.Playwright # Assuming this is the test repo, using original repo url provided in context or assuming the user changes it later to their private one.
-        # If private, you would need: token: ${{ secrets.PAT }}
+        repository: nishant7956/EcommerceAutomationPlaywright
         path: 'tests'
 
     - name: Build Playwright Tests

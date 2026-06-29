@@ -1,0 +1,2 @@
+[SETUP] Started test: ECommerce.Playwright.Tests.UI.Auth.AdminLoginTests.Admin_Can_Login_With_Valid_Credentials
+[TEARDOWN] Test finished with status: Passed

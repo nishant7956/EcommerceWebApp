@@ -25,7 +25,7 @@
             <dd class="col-sm-8">
                 @if (!string.IsNullOrEmpty(Model?.ImageUrl))
                 {
-                    <a href="@Model.ImageUrl" target="_blank">@Model.ImageUrl</a>
+                    <a href="@Model.ImageUrl" target="_blank" rel="noopener noreferrer">@Model.ImageUrl</a>
                 }
                 else
                 {

@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Web App Code
+      uses: actions/checkout@v4
+      with:
+        path: 'webapp'
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Build Web App
+      run: dotnet build
+      working-directory: ./webapp
+
+    - name: Start Web App in Background
+      run: |
+        dotnet run --no-build &
+        echo "Web App started in the background."
+      working-directory: ./webapp
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+
+    - name: Wait for Web App to be ready
+      run: |
+        timeout 30 bash -c 'until curl -s http://localhost:5130/ > /dev/null; do sleep 1; done'
+        echo "Web App is up and running."
+
+    - name: Checkout Playwright Tests Code
+      uses: actions/checkout@v4
+      with:
+        repository: nishant7956/OrangeHRM.Playwright # Assuming this is the test repo, using original repo url provided in context or assuming the user changes it later to their private one.
+        # If private, you would need: token: ${{ secrets.PAT }}
+        path: 'tests'
+
+    - name: Install Playwright Browsers
+      run: pwsh tests/ECommerce.Playwright.Tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
+
+    - name: Run Playwright Tests
+      run: dotnet test ECommerce.Playwright.slnx --logger:"trx;LogFileName=test_results.trx"
+      working-directory: ./tests
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: ./tests/TestResults/

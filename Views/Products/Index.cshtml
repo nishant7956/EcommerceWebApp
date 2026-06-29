@@ -1,0 +1,52 @@
+@model IEnumerable<QAAutomationPortfolio.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="display-5 fw-bold text-primary">Products Catalog</h1>
+    <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm" id="btn-create-product">
+        <i class="bi bi-plus-circle"></i> Add New Product
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle" id="products-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.Price)</th>
+                        <th>Stock</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                        <tr>
+                            <td class="fw-semibold">@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td class="text-success fw-bold">@item.Price.ToString("C")</td>
+                            <td>
+                                @if(item.StockQuantity > 0)
+                                {
+                                    <span class="badge bg-success rounded-pill">In Stock (@item.StockQuantity)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger rounded-pill">Out of Stock</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
